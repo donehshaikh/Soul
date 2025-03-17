@@ -1,0 +1,40 @@
+name: Custom Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up SSH key
+      if: env.SSH_RSA_PRIVATE_KEY != ''
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_RSA_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+
+    - name: Update system packages
+      run: |
+        sudo apt update
+        sudo apt install g++ -y
+        sudo apt install python3-pip -y
+
+    - name: Install Python dependencies
+      run: |
+        pip3 install telebot pymongo aiohttp
+
+    - name: Compile C++ program
+      run: g++ -std=c++14 soul.cpp -o soul -pthread
+
+    - name: Run Python script
+      run: python3 soul.py
