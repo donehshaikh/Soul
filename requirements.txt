@@ -1,2 +1,2 @@
-python-telegram-bot>=22.0
-PyGithub>=2.0
+python-telegram-bot>=21.0  # Latest stable as of 2026; supports async Application, handlers, etc.
+playwright>=1.40           # Core Playwright package (includes async_playwright)
